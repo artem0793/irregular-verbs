@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript">
+    var VERSION = 'v1.0';
+  </script>
+  <title>Неправильные глаголы</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+  <style type="text/css">
+    .valid {
+      border-color: green!important;
+    }
+  </style>
+  <script type="text/javascript">
+  	var layout;
+  	var content;
+  	var game;
+
+  	function main_width(width) {
+  		layout.style.maxWidth = width + 'px';
+  	}
+
+  	function screan_content(html) {
+			content.innerHTML = html;
+  	}
+
+  	function screan_game() {
+  		main_width(700);
+
+  		screan_content(
+	  		'<form autocomplete="off" class="ui segment huge form">' +
+	  			'<div class="ui stacked blue compact segment" style="display:table;margin-left:auto;margin-right:auto">' +
+	  				'<h3 class="ui header word"></h3>'+
+	  			'</div>' +
+				  '<div class="three fields">' +
+				    '<div class="field">' +
+				      '<label>Infinitive</label>' +
+				      '<input type="text" name="infinitive" autofocus>' +
+				    '</div>' +
+				    '<div class="field">' +
+				      '<label>Past Simple</label>' +
+				      '<input type="text" name="past_simple">' +
+				    '</div>' +
+				    '<div class="field">' +
+				      '<label>Past Participle</label>' +
+				      '<input type="text" name="past_participle">' +
+				    '</div>' +
+				  '</div>' +
+				  '<button class="ui red basic button" type="button" onclick="game.results.length ? game.finish() : screan_init()" tabindex="-1">' +
+				   	'Выйти' +
+				  '</button>' +
+				  '<button class="ui blue basic submit button" type="submit">' +
+				   	'Дальше <i class="right arrow icon"></i>' +
+				  '</button>' +
+				  '<div class="ui bottom blue small attached progress">' +
+				    '<div class="bar"></div>' + 
+				  '</div>' + 
+				'</form>'
+			);
+
+			var bar = document.querySelector('.ui.progress .bar');
+			var word = document.querySelector('.word');
+			var form = document.querySelector('form.ui.form');
+				  game = new Game(Array.from(verbs), word, form, bar);
+
+			game.init();
+  	}
+
+  	function check_row(a, b) {
+			if (!a) {
+  			return { class: 'warning', value: b.replace('|', ', ') };
+  		}
+
+  		if (b.split('|').indexOf(a) > -1) {
+  			return { class: 'positive', value: a };
+  		}
+
+			return { class: 'negative', value: '<s>' + a + '</s> ' + b.replace('|', ', ') };
+  	}
+
+  	function view_table(table) {
+  		var cell_theme = function(type) {return function(cell) { return '<' + type + ' class="' + (cell.class ? cell.class : '') + '">' + (cell.value ? cell.value : cell) + '</' + type + '>'; }};
+  		var output = '<table class="ui ' + (table.class ? table.class : '') + ' table"><thead><tr>';
+  				output+= table.header.map(cell_theme('th')).join('');
+  				output+= '</tr></thead><tbody>';
+  				output+= table.rows.map(function(row) { return '<tr>' + row.map(cell_theme('td')).join('') + '</tr>'; }).join('');
+  				output+= '</tbody></table>';
+
+  		return output;
+  	}
+
+  	function screan_game_results(results) {
+      var results = results.map(function(row) {
+        return [row.current[3], check_row(row.answer[0], row.current[0]), check_row(row.answer[1], row.current[1]), check_row(row.answer[2], row.current[2])];
+      });
+      
+      var statistic = {
+        total: 0,
+        valid: 0,
+        error: 0
+      };
+     
+      results.forEach(function(currentValue, index, array) {
+        this.total++;
+        this[(currentValue[1].class == 'positive' && currentValue[2].class == 'positive' && currentValue[3].class == 'positive') ? 'valid' : 'error']++;
+      }, statistic);
+
+  		var output = '<div class="ui segment">' +
+  				'<h2 class="ui header">Ответы</h2>' +
+  				'<div class="ui centered grid">'+
+					  '<div class="column">'+
+		  				'<div class="ui statistics">' +  
+			  				'<div class="red statistic">' +  
+							    '<div class="value">' +  
+							      statistic.error +
+							    '</div>' +  
+							    '<div class="label">Ошибок</div>' +  
+							  '</div>' + 
+							  '<div class="blue statistic">' +  
+							    '<div class="value">' +  
+							      Math.round(statistic.valid / (statistic.total * 0.01)) + '%'+
+							    '</div>' +  
+							    '<div class="label">Успех</div>' +  
+							  '</div>' +  
+							  '<div class="green statistic">' +  
+							    '<div class="value">' +  
+							      statistic.valid +
+							    '</div>' +  
+							    '<div class="label">Правильных</div>' +  
+							  '</div>' +  
+		  				'</div>' +  
+	  				'</div>'+
+					'</div>'+
+  				view_table({
+		  			class: 'celled',
+		  			header: ['Слово', 'Infinitive', 'Past Simple', 'Past Participle'],
+		  			rows: results
+  				}) +
+					'<button class="ui blue basic submit button" onclick="screan_init()">Назад</button>' +
+				'</div>';
+
+  		main_width(800);
+  		screan_content(output);
+  	}
+
+  	function Game(words, word, form, bar) {
+  		this.results = [];
+  		this.finished = false;
+  		this.current = null;
+  		this.total_count = words.length;
+  		this.words = words;
+  		this.word = word;
+  		this.form = form;
+  		this.bar = bar;
+  	}
+		
+		Game.prototype.getWord = function() {
+      var key = Math.round(( this.words.length - 1 )  * Math.random());
+      var item = this.words[key];
+
+      if (!item) {
+      	return null;
+      }
+
+      this.words.splice(key, 1);
+
+      return item;
+		}
+
+		Game.prototype.init = function() {
+			var self = this;
+			var button = this.form.querySelector('.submit');
+
+  		button.onclick = this.form.onsubmit = function(event) {
+  			event.preventDefault();
+  			self.next();
+  		};
+
+      this.form.infinitive.oninput = this.form.past_simple.oninput = this.form.past_participle.oninput = function(event) {
+        if (check_row(this.value, this.getAttribute('data-validate')).class == 'positive') {
+          this.classList.add('valid');
+          
+          switch (this.name) {
+              case 'infinitive':
+                if (!self.form.past_simple.value) {
+                  self.form.past_simple.focus();
+                }
+                break;
+                
+              case 'past_simple':
+                if (!self.form.past_participle.value) {
+                  self.form.past_participle.focus();  
+                }
+                break;
+            }
+        }
+        else {
+          this.classList.remove('valid');
+        }
+      };
+
+  		this.display();
+  	};
+
+  	Game.prototype.display = function() {
+  		this.current = this.getWord();
+
+  		if (!this.current) {
+  			this.form.classList.add('disabled');
+
+  			return this.finish();
+  		}
+
+  		this.word.innerHTML = this.current[3];
+      this.form.infinitive.setAttribute('data-validate', this.current[0]);
+      this.form.past_simple.setAttribute('data-validate', this.current[1]);
+      this.form.past_participle.setAttribute('data-validate', this.current[2]);
+      
+      var event = new Event('input');
+
+      this.form.infinitive.dispatchEvent(event);
+      this.form.past_simple.dispatchEvent(event);
+      this.form.past_participle.dispatchEvent(event);
+  	};
+
+  	Game.prototype.finish = function() {
+  			this.finished = true;
+        this.results.sort(function (a, b) {
+          return a.current[0].localeCompare( b.current[0]);
+        });
+
+        screan_game_results(this.results);
+  	};
+
+  	Game.prototype.updateBar = function() {
+  		this.bar.style.width = Math.round((this.total_count - this.words.length) / (this.total_count / 100)) + '%';
+  	};
+
+  	Game.prototype.validate = function() {
+  		this.results.push({
+  			current: this.current,
+  			answer: [
+					this.form.infinitive.value,
+		  		this.form.past_simple.value,
+		  		this.form.past_participle.value,
+  			].map(function(item) {
+  				return item.toLowerCase().replace(/[^a-z]/ig, '');
+  			}),
+  		});
+  	};
+
+  	Game.prototype.next = function() {
+  		if (this.finished) {
+  			return;
+  		}
+
+  		this.validate();
+			this.updateBar();
+  		this.form.reset();
+  		this.display();
+  		this.form.infinitive.focus();
+  	};
+
+    function load_least_release() {
+      return fetch('https://api.github.com/repos/artem0793/irregular-verbs/releases/latest')
+        .then(function(response) {
+          return response.json();
+        });
+    }
+
+    function cache_load_least_release(reset) {
+      var reset = reset || false;
+      var d = new Date();
+      var key = d.getFullYear() + '_' + d.getMonth() + '_' + d.getDate() + '_' + d.getHours();
+
+      if (reset != true && localStorage.check_update) {
+        var updates = JSON.parse(localStorage.check_update)
+        
+        if (updates[key]) {
+            return Promise.resolve(updates[key]);
+        }
+      }
+
+      return load_least_release().then(function(data) {
+        var save = {};
+        save[key] = data;
+        localStorage.check_update = JSON.stringify(save);
+      
+        return data;
+      });
+    }
+
+  	async function screan_init() {
+      var is_available = false;
+  		main_width(400);
+      
+      try {
+        var release = await cache_load_least_release();
+        var is_available = parseFloat((release.tag_name + '').replace(/\w/, ''), 10) > parseFloat(VERSION.replace('v', ''), 10);
+      } catch (e) {
+
+      }
+      
+			screan_content(
+				'<div class="ui inverted segment">' +
+          '<a class="ui red ribbon label">Версия: ' + VERSION + '</a>'+
+	  			'<h1 class="ui inverted header" style="margin-top:0">' +
+              (is_available ? '<div class="sub header">Доступно обновление до ' + release.tag_name + ' <a href="https://github.com/artem0793/irregular-verbs/archive/refs/tags/' + release.tag_name + '.zip" target="_blank">скачать</a></div>' : '') +
+              'Неправильные глаголы' +
+          '</h1>' +
+	  			'<button onclick="screan_game()" type="button" class="ui inverted primary basic button">Начать</button>' +
+	  		'</div>'
+			);
+  	}
+
+  	function main() {
+	  	layout = document.querySelector('.column');
+	  	content = document.querySelector('#content');
+  		
+  		screan_init();
+  	}
+
+  </script>
+</head>
+<body class="ui attached inverted segment" onload="main()">
+	<div class="ui middle aligned center aligned grid" style="height: 100%">
+	  <main class="column" style="text-align: left">
+	    <div id="content"></div>
+	  </main>
+	</div>
+<script type="text/javascript">
+  var verbs = [
+    ['be', 'was|were', 'been', 'быть'],
+    ['bear', 'bore', 'born', 'носить, рождать'],
+    ['become', 'became', 'become', 'становиться'],
+    ['begin', 'began', 'begun', 'начинать'],
+    ['bite', 'bit', 'bitten', 'кусать'],
+    ['blow', 'blew', 'blown', 'дуть'],
+    ['break', 'broke', 'broken', 'ломать, разбивать'],
+    ['bring', 'brought', 'brought', 'приносить'],
+    ['build', 'built', 'built', 'строить'],
+    ['buy', 'bought', 'bought', 'покупать'],
+    ['catch', 'caught', 'caught', 'ловить'],
+    ['choose', 'chose', 'chosen', 'выбирать'],
+    ['come', 'came', 'come', 'приходить'],
+    ['cut', 'cut', 'cut', 'резать'],
+    ['do', 'did', 'done', 'делать'],
+    ['drink', 'drank', 'drunk', 'пить'],
+    ['drive', 'drove', 'driven', 'водить (машину)'],
+    ['eat', 'ate', 'eaten', 'кушать'],
+    ['fall', 'fell', 'fallen', 'падать'],
+    ['feed', 'fed', 'fed', 'кормить'],
+    ['feel', 'felt', 'felt', 'чувствовать'],
+    ['find', 'found', 'found', 'находить'],
+    ['fly', 'flew', 'flown', 'летать'],
+    ['forget', 'forgot', 'forgotten', 'забывать'],
+    ['get', 'got', 'got', 'получать'],
+    ['give', 'gave', 'given', 'давать'],
+    ['go', 'went', 'gone', 'идти'],
+    ['grow', 'grew', 'grown', 'расти, вырастать'],
+    ['have', 'had', 'had', 'иметь'],
+    ['hide', 'hid', 'hidden', 'прятать, скрывать'],
+    ['hit', 'hit', 'hit', 'ударять, бить'],
+    ['hear', 'heard', 'heard', 'слышать'],
+    ['hold', 'held', 'held', 'держать'],
+    ['keep', 'kept', 'kept', 'держать, хранить'],
+    ['know', 'knew', 'known', 'знать'],
+    ['learn', 'learnt', 'learnt', 'учить, учиться'],
+    ['leave', 'left', 'left', 'уезжать'],
+    ['lend', 'lent', 'lent', 'давать взаймы'],
+    ['lose', 'lost', 'lost', 'терять'],
+    ['make', 'made', 'made', 'делать, изготавливать'],
+    ['meet', 'met', 'met', 'встречать'],
+    ['pay', 'paid', 'paid', 'платить'],
+    ['put', 'put', 'put', 'класть, ставить'],
+    ['quit', 'quit', 'quit', 'увольняться, бросать что-то'],
+    ['read', 'read', 'read', 'читать'],
+    ['ride', 'rode', 'ridden', 'ездить верхом'],
+    ['ring', 'rang', 'rung', 'звонить'],
+    ['run', 'ran', 'run', 'бегать'],
+    ['say', 'said', 'said', 'сказать'],
+    ['see', 'saw', 'seen', 'видеть'],
+    ['sell', 'sold', 'sold', 'продавать'],
+    ['send', 'sent', 'sent', 'отправлять, посылать'],
+    ['sing', 'sang', 'sung', 'петь'],
+    ['sit', 'sat', 'sat', 'сидеть'],
+    ['sleep', 'slept', 'slept', 'спать'],
+    ['speak', 'spoke', 'spoken', 'говорить'],
+    ['spend', 'spent', 'spent', 'проводить/тратить (время)'],
+    ['steal', 'stole', 'stolen', 'воровать, красть'],
+    ['swim', 'swam', 'swum', 'плавать'],
+    ['take', 'took', 'taken', 'брать'],
+    ['teach', 'taught', 'taught', 'учить (кого-то)'],
+    ['tell', 'told', 'told', 'сказать (кому-то)'],
+    ['think', 'thought', 'thought', 'думать'],
+    ['throw', 'threw', 'thrown', 'бросать'],
+    ['understand', 'understood', 'understood', 'понимать'],
+    ['wake', 'woke', 'woken', 'просыпаться, будить'],
+    ['wear', 'wore', 'worn', 'носить (одежду)'],
+    ['win', 'won', 'won', 'побеждать'],
+    ['write', 'wrote', 'written', 'писать'],
+  ];
+</script>
+</body>
+</html>
