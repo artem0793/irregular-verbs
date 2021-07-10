@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <style>
+        @import "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css";
+
+        .valid {
+            box-shadow: 0 0 3px green!important;
+        }
+    </style>
+    <script type="text/javascript">
+      function tasks(
+        VerbsTask, 
+        IrregularVerbsTask, 
+        IrregularVerbsExtendedTask, 
+        PhrasalVerbsTask, 
+        WordTask,
+        AdjectiveTask
+      ) {
+        //@TODO сделать возможность надад и вперед
+        //@TODO Страница изучение
+        //@TODO подсказать по одной букве.
+        var regular_verbs = [
+          ["сопровождать, следовать вместе", "accompany", "accompanied"],
+          ["добавить", "add", "added"],
+          ["любоваться, рассматривать с восхищением", "admire", "admired"],
+          ["допускать, соглашаться", "admit", "admitted"],
+          ["соглашаться", "agree", "agreed"],
+          ["одобрять", "approve", "approved"],
+          ["прибывать", "arrive", "arrived"],
+          ["спрашивать", "ask", "asked"],
+          ["атаковать, нападать, штурмовать", "attack", "attacked"],
+          ["верить, доверять", "believe", "believed"],
+          ["занимать", "borrow", "borrowed"],
+          ["чистить щёткой", "brush", "brushed"],
+          ["звать", "call", "called"],
+          ["отменять", "cancel|abolish", "cancelled|abolished"],
+          ["нести, носить; относить; переносить", "carry", "carried"],
+          ["праздновать", "celebrate", "celebrated"],
+          ["проверять", "check", "checked"],
+          ["закрывать", "close", "closed"],
+          ["собирать", "collect", "collected"],
+          ["сравнивать", "compare", "compared"],
+          ["завершать, заканчивать, кончать", "complete", "completed"],
+          ["концентрироваться", "concentrate", "concentrated"],
+          ["соединять", "connect", "connected"],
+          ["рассматривать, обсуждать", "consider", "considered"],
+          ["заключаться в чём-л", "consist", "consisted"],
+          ["продолжать", "continue", "continued"],
+          ["делать пожертвования, взносы", "contribute", "contributed"],
+          ["готовить", "cook", "cooked"],
+          ["справиться; выдержать, совладать", "cope", "coped"],
+          ["исправлять, вносить поправки, корректировать", "correct", "corrected"],
+          ["считать 1+1", "count", "counted"],
+          ["покрывать", "cover", "covered"],
+          ["плакать", "cry", "cried"],
+          ["повреждать, портить", "damage", "damaged"],
+          ["отрицать", "deny", "denied"],
+          ["замечать, открывать, обнаруживать", "detect", "detected"],
+          ["умирать", "die", "died"],
+          ["обнаруживать, находить", "discover", "discovered"],
+          ["обсуждать", "discuss", "discussed"],
+          ["выставлять, показывать; демонстрировать", "display", "displayed"],
+          ["делить (на несколько частей, групп)", "divide", "divided"],
+          ["капать, падать", "drop", "dropped"],
+          ["редактировать", "edit", "edited"],
+          ["входить, проникать", "enter", "entered"],
+          ["бежать (из заключения), совершать побегуходить", "escape", "escaped"],
+          ["оценивать; устанавливать стоимость", "evaluate", "evaluated"],
+          ["объяснять", "explain", "explained"],
+          ["наполнять", "fill", "filled"],
+          ["заканчивать", "finish", "finished"],
+          ["формировать", "form", "formed"],
+          ["добывать, зарабатывать, выигрывать", "gain", "gained"],
+          ["приветствовать", "greet", "greeted"],
+          ["гадать, догадываться", "guess", "guessed"],
+          ["случаться, происходить", "happen", "happened"],
+          ["ненавидеть", "hate", "hated"],
+          ["нанимать", "hire", "hired"],
+          ["торопить, подгонять; ускорять", "hurry", "hurried"],
+          ["заключать, включать в себя, содержать в себе", "include", "included"],
+          ["показывать, указывать", "indicate", "indicated"],
+          ["внушать, вселять (чувства)", "inspire", "inspired"],
+          ["намереваться, планировать", "intend", "intended"],
+          ["приглашать, звать", "invite", "invited"],
+          ["присоединяться", "join", "joined"],
+          ["убивать", "kill", "killed"],
+          ["целовать", "kiss", "kissed"],
+          ["испытывать недостаток, нуждаться в (чём-л.)", "lack", "lacked"],
+          ["смеяться; рассмеяться", "laugh", "laughed"],
+          ["любить, нравиться", "like", "liked"],
+          ["ограничивать; ставить предел", "limit", "limited"],
+          ["соединять, связывать, смыкать", "link", "linked"],
+          ["запирать, закрывать", "lock", "locked"],
+          ["смотреть", "look", "looked"],
+          ["любить", "love", "loved"],
+          ["руководить, управлять, заведовать", "manage", "managed"],
+          ["заключать брак", "marry", "married"],
+          ["скучать", "miss", "missed"],
+          ["смешивать", "mix", "mixed"],
+          ["перемещать", "move", "moved"],
+          ["нуждаться", "need", "needed"],
+          ["замечать, обращать внимание, быть видимым", "notice", "noticed"],
+          ["предлагать", "offer", "offered"],
+          ["организовывать", "organize", "organized"],
+          ["открывать", "open", "opened"],
+          ["упаковывать", "pack", "packed"],
+          ["рисовать, писать (красками)", "paint", "painted"],
+          ["делать паузу, временно прекращать", "pause", "paused"],
+          ["играть", "play", "played"],
+          ["применять, осуществлять на практике, соблюдать", "practise", "practised"],
+          ["притворяться, делать вид", "pretend", "pretended"],
+          ["производить, выпускать", "produce", "produced"],
+          ["снабжать; доставлять", "provide", "provided"],
+          ["публиковать", "publish", "published"],
+          ["тянуть, тащить, натягивать", "pull", "pulled"],
+          ["наказывать; карать; налагать взыскание", "punish", "punished"],
+          ["поднимать, будить, воскрешать", "raise", "raised"],
+          ["передавать, подавать, протягивать, давать", "reach", "reached"],
+          ["получать", "recieve", "recieved"],
+          ["узнавать, опознавать, информ. распознавать", "recognize", "recognized"],
+          ["уменьшить, понижать", "reduce", "reduced"],
+          ["расценивать, рассматривать, считать", "regard", "regarded"],
+          ["отклонять", "reject", "rejected"],
+          ["ослаблять, расслаблять", "relax", "relaxed"],
+          ["оставаться (каким?)", "remain", "remained"],
+          ["чинить", "repair", "repaired"],
+          ["отвечать, реагировать на (что-л.)", "reply", "replied"],
+          ["отвечать", "answer", "answered"],
+          ["исследовать, изучать", "research", "researched"],
+          ["уважать", "respect", "respected"],
+          ["сохранять", "save", "saved"],
+          ["искать", "search", "searched"],
+          ["казаться", "seem", "seemed"],
+          ["обслуживать", "serve", "served"],
+          ["кричать", "shout", "shouted"],
+          ["вздыхать", "sigh", "sighed"],
+          ["подписывать", "sign", "signed"],
+          ["улыбаться", "smile", "smiled"],
+          ["оставаться", "stay", "stayed"],
+          ["останвливаться", "stop", "stopped"],
+          ["учиться", "study", "studied"],
+          ["предлагать", "suggest", "suggested"],
+          ["предполагать", "suppose", "supposed"],
+          ["удивляться", "surprise", "surprised"],
+          ["выживать", "survive", "survived"],
+          ["говорить", "talk", "talked"],
+          ["ухаживать", "tend", "tended"],
+          ["благодарить", "thank", "thanked"],
+          ["завязывать, привязывать, связывать", "tie", "tied"],
+          ["переводить", "translate", "translated"],
+          ["путешествовать", "travel", "traveled"],
+          ["доверять", "trust", "trusted"],
+          ["использовать", "use", "used"],
+          ["ждать", "wait", "waited"],
+          ["гулять", "walk", "walked"],
+          ["желать, хотеть", "want", "wanted"],
+          ["растрачивать", "waste", "wasted"],
+          ["выражать пожелание, надежду", "wish", "wished"],
+          ["работать", "work", "worked"],
+          ["волноваться", "worry", "worried"],
+      ];
+
+        var irregular_verbs = [
+          ['быть', 'be', 'was|were', 'been'],
+          ['носить, рождать', 'bear', 'bore', 'born'],
+          ['становиться', 'become', 'became', 'become'],
+          ['начинать', 'begin', 'began', 'begun'],
+          ['кусать', 'bite', 'bit', 'bitten'],
+          ['дуть', 'blow', 'blew', 'blown'],
+          ['ломать, разбивать', 'break', 'broke', 'broken'],
+          ['приносить', 'bring', 'brought', 'brought'],
+          ['строить', 'build', 'built', 'built', ],
+          ['покупать', 'buy', 'bought', 'bought'],
+          ['ловить', 'catch', 'caught', 'caught'],
+          ['выбирать', 'choose', 'chose', 'chosen'],
+          ['приходить', 'come', 'came', 'come'],
+          ['резать', 'cut', 'cut', 'cut'],
+          ['делать', 'do', 'did', 'done'],
+          ['пить', 'drink', 'drank', 'drunk'],
+          ['водит (машину)', 'drive', 'drove', 'driven'],
+          ['кушать', 'eat', 'ate', 'eaten'],
+          ['падать', 'fall', 'fell', 'fallen'],
+          ['кормить', 'feed', 'fed', 'fed'],
+          ['чувствовать', 'feel', 'felt', 'felt'],
+          ['находить', 'find', 'found', 'found'],
+          ['летать', 'fly', 'flew', 'flown'],
+          ['забывать', 'forget', 'forgot', 'forgotten'],
+          ['получать', 'get', 'got', 'got'],
+          ['давать', 'give', 'gave', 'given'],
+          ['идти', 'go', 'went', 'gone'],
+          ['расти, вырастать', 'grow', 'grew', 'grown'],
+          ['иметь', 'have', 'had', 'had'],
+          ['прятать, скрывать', 'hide', 'hid', 'hidden'],
+          ['ударять, бить', 'hit', 'hit', 'hit'],
+          ['слышать', 'hear', 'heard', 'heard'],
+          ['держать', 'hold', 'held', 'held'],
+          ['хранить', 'keep', 'kept', 'kept'],
+          ['знать', 'know', 'knew', 'known'],
+          ['учить, учиться', 'learn', 'learnt', 'learnt'],
+          ['уходть, оставлять, уезжать', 'leave', 'left', 'left'],
+          ['давать взаймы', 'lend', 'lent', 'lent'],
+          ['терять', 'lose', 'lost', 'lost'],
+          ['делать, изготавливать', 'make', 'made', 'made'],
+          ['встречать', 'meet', 'met', 'met'],
+          ['платить', 'pay', 'paid', 'paid'],
+          ['класть, ставить', 'put', 'put', 'put'],
+          ['увольняться, бросать что-то', 'quit', 'quit', 'quit'],
+          ['читать', 'read', 'read', 'read'],
+          ['ездить верхом', 'ride', 'rode', 'ridden'],
+          ['звонить', 'ring', 'rang', 'rung'],
+          ['бегать', 'run', 'ran', 'run'],
+          ['сказать', 'say', 'said', 'said'],
+          ['видеть', 'see', 'saw', 'seen'],
+          ['продавать', 'sell', 'sold', 'sold'],
+          ['отправлять, посылать', 'send', 'sent', 'sent'],
+          ['петь', 'sing', 'sang', 'sung'],
+          ['сидеть', 'sit', 'sat', 'sat'],
+          ['спать', 'sleep', 'slept', 'slept'],
+          ['говорить', 'speak', 'spoke', 'spoken'],
+          ['проводить/тратить (время)', 'spend', 'spent', 'spent'],
+          ['воровать, красть', 'steal', 'stole', 'stolen'],
+          ['плавать', 'swim', 'swam', 'swum'],
+          ['брать', 'take', 'took', 'taken'],
+          ['учить (кого-то)', 'teach', 'taught', 'taught'],
+          ['сказать (кому-то)', 'tell', 'told', 'told'],
+          ['думать', 'think', 'thought', 'thought'],
+          ['бросать', 'throw', 'threw', 'thrown'],
+          ['понимать', 'understand', 'understood', 'understood'],
+          ['просыпаться, будить', 'wake', 'woke', 'woken'],
+          ['носить (одежду)', 'wear', 'wore', 'worn'],
+          ['побеждать', 'win', 'won', 'won'],
+          ['писать', 'write', 'wrote', 'written'],
+        ];
+
+        var extended_irregular = [
+          ['позволять', 'let', 'let', 'let'],
+          ['стоять', 'stand', 'stood', 'stood'],
+          ["будить, проснуться", "awake", "awoke|awoke", "awaked|awoken"],
+          ["быть, находиться", "be", "was|were", "been"],
+          ["носить, выносить", "bear", "bore|bore", "born|borne"],
+          ["становиться", "become", "became", "become"],
+          ["начинать(ся)", "begin", "began", "begun"],
+          ["гнуть(ся)", "bend", "bent", "bent|bended"],
+          ["кусать", "bite", "bit|bit", "bit|bitten"],
+          ["дуть", "blow", "blew", "blown|blowed"],
+          ["ломать, сломать", "break", "broke", "broken"],
+          ["принести", "bring", "brought", "brought"],
+          ["строить", "build", "built", "built"],
+          ["жечь, гореть", "burn", "burnt|burned", "burnt|burned"],
+          ["взорваться, разразиться", "burst", "burst", "burst"],
+          ["купить", "buy", "bought", "bought"],
+          ["мочь, уметь", "can", "could", "been able"],
+          ["ловить, поймать", "catch", "caught", "caught"],
+          ["выбирать", "choose", "chose", "chosen"],
+          ["приходить", "come", "came", "come"],
+          ["стоить", "cost", "cost", "cost"],
+          ["резать", "cut", "cut", "cut"],
+          ["делать", "do", "did", "done"],
+          ["рисовать, тащить", "draw", "drew", "drawn"],
+          ["видеть сны, мечтать", "dream", "dreamt|dreamed", "dreamt|dreamed"],
+          ["пить", "drink", "drank", "drunk"],
+          ["водить, гнать", "drive", "drove", "driven"],
+          ["кушать, есть", "eat", "ate", "eaten"],
+          ["падать", "fall", "fell", "fallen"],
+          ["кормить", "feed", "fed", "fed"],
+          ["чувствовать", "feel", "felt", "felt"],
+          ["сражаться", "fight", "fought", "fought"],
+          ["находить", "find", "found", "found"],
+          ["летать", "fly", "flew", "flown"],
+          ["запрещать", "forbid", "forbad|forbade", "forbidden"],
+          ["забыть", "forget", "forgot", "forgotten"],
+          ["получать", "get", "got", "gotten|got"],
+          ["давать", "give", "gave", "given"],
+          ["идти, уходить", "go", "went", "gone"],
+          ["расти", "grow", "grew", "grown"],
+          ["висеть, повесить", "hang", "hung|hanged", "hung|hanged"],
+          ["иметь", "have", "had", "had"],
+          ["слушать", "hear", "heard", "heard"],
+          ["прятать, прятаться", "hide", "hid", "hidden"],
+          ["ударить", "hit", "hit", "hit"],
+          ["держать, проводить", "hold", "held", "held"],
+          ["ранить, обижать", "hurt", "hurt", "hurt"],
+          ["хранить", "keep", "kept", "kept"],
+          ["знать", "know", "knew", "known"],
+          ["вести (за собой)", "lead", "led", "led"],
+          ["учить(ся)", "learn", "learnt|learned", "learnt|learned"],
+          ["оставлять, уезжать", "leave", "left", "left"],
+          ["давать взаймы", "lend", "lent", "lent"],
+          ["лежать", "lie", "lay", "lain"],
+          ["врать", "lie", "lied", "lied"],
+          ["осветить", "light", "lit|lighted", "lit|lighted"],
+          ["терять", "lose", "lost", "lost"],
+          ["делать, изготавливать", "make", "made", "made"],
+          ["подразумевать", "mean", "meant", "meant"],
+          ["встречать", "meet", "met", "met"],
+          ["косить", "mow", "mowed", "mowed|mowed|mown"],
+          ["платить", "pay", "paid", "paid"],
+          ["класть", "put", "put", "put"],
+          ["покидать (что-то), оставлять (что-то)", "quit", "quit|quitted", "quit|quitted"],
+          ["читать", "read", "read", "read"],
+          ["ездить верхом", "ride", "rode", "ridden"],
+          ["звонить", "ring", "rang", "rung"],
+          ["подняться", "rise", "rose", "risen"],
+          ["бежать", "run", "ran", "run"],
+          ["пилить", "saw", "sawed", "sawn|sawed"],
+          ["говорить, сказать", "say", "said", "said"],
+          ["видеть", "see", "saw|saw", "seen"],
+          ["искать", "seek", "sought", "sought"],
+          ["продавать", "sell", "sold", "sold"],
+          ["послать", "send", "sent", "sent"],
+          ["устанавливать", "set", "set", "set"],
+          ["шить", "sew", "sewed", "sewed|sewn"],
+          ["светить, сиять", "shine", "shone|shined", "shone|shined"],
+          ["стрелять", "shoot", "shot", "shot"],
+          ["показывать", "show", "showed", "shown"],
+          ["закрывать", "shut", "shut", "shut"],
+          ["петь", "sing", "sang", "sung"],
+          ["погружаться, тонуть", "sink", "sank", "sunk"],
+          ["сидеть", "sit", "sat", "sat"],
+          ["спать", "sleep", "slept", "slept"],
+          ["говорить", "speak", "spoke", "spoken"],
+          ["тратить", "spend", "spent", "spent"],
+          ["расщепить(ся)", "split", "split", "split"],
+          ["портить", "spoil", "spoilt|spoiled", "spoilt|spoiled"],
+          ["распространиться", "spread", "spread", "spread"],
+          ["украсть", "steal", "stole|stole", "stolen"],
+          ["уколоть, приклеивать", "stick", "stuck", "stuck"],
+          ["жалить, ужалить", "sting", "stung", "stung"],
+          ["плыть", "swim", "swam", "swum"],
+          ["взять, брать", "take", "took", "taken"],
+          ["учить (кого-то)", "teach", "taught", "taught"],
+          ["рассказывать, говорить (кому-то)", "tell", "told", "told"],
+          ["думать", "think", "thought", "thought"],
+          ["бросать", "throw", "threw", "thrown"],
+          ["просыпаться, будить", "wake", "woke|waked", "woken|waked"],
+          ["носить(одежду)", "wear", "wore", "worn"],
+          ["выиграть", "win", "won", "won"],
+          ["писать", "write", "wrote", "written"]
+        ];
+
+
+        var phrasal_verbs = [
+          ["сдаваться", "given up", "give up", "gave up"],
+          ["выключать прибор, сворачивать с дороги", "turned off", "turn off", "turned off"],
+          ["переворачивать", "turned over", "turn over", "turned over"],
+          ["не пускать, отказывать", "turned away", "turn away", "turned away"],
+          ["включать, зависеть", "turned on", "turn on", "turned on"],
+          ["оказываться, выяснять", "turned out", "turn out", "turned out"],
+          ["прибавлять (громкость), появляться", "turned up", "turn up", "turned up"],
+          ["убавлять (громкость), отклонять (предложение)", "turned down", "turn down", "turned down"],
+          ["превратиться, превратить", "turned into", "turn into", "turned into"],
+          ["вставать, подниматься", "gotten up", "get up", "got up"],
+          ["возвращаться, менять планы", "turned back", "turn back", "turned back"],
+          ["оборачиваться назад, улучшить", "turned around", "turn around", "turned around"],
+          ["сдавать, идти спать", "turned in", "turn in", "turned in"],
+          ["обращаться (за помощью), перейти (к теме)", "turned to", "turn to", "turned to"],
+          ["ломать, разрушать", "broken down", "break down", "broke down"],
+          ["возвращаться, воротиться", "come back", "come back", "came back"],
+          ["проснуться, просыпаться", "woken up", "wake up", "woke up"],
+          ["избить, избивать", "beaten up", "beat up", "beat up"],
+          ["устанавливать, учреждать", "set up", "set up", "set up"],
+          ["разбивать, разбиваться", "broken up", "break up", "broke up"],
+          ["разразиться, убегать", "broken out", "break out", "broke out"],
+          ["болтаться, вывесить", "hung out", "hang out", "hung out"],
+          ["идти за", "gone after", "go after", "went after"],
+          ["переделывать, делать вновь", "done over", "do over", "did over"],
+          ["прорваться, прошибать", "broken through", "break through", "broke through"],
+          ["выходить, выходить в свет", "gone out", "go out", "went out"],
+          ["возвращаться", "got back|gotten back", "get back", "got back"],
+          ["взрывать, надувать", "blown up", "blow up", "blew up"],
+          ["стремиться, прицелиться", "aimed at", "aim at", "aimed at"],
+          ["подумать, думать", "thought about", "think about", "thought about"],
+          ["вернуть, приносить обратно", "brought back", "bring back", "brought back"],
+          ["отступать, вернутся, копировать", "backed up", "back up", "backed up"],
+          ["попросить что-то", "asked for", "ask for", "asked for"],
+          ["вырастать, подрасти", "grown up", "grow up", "grown up"],
+          ["вешать трубку", "hung up", "hang up", "hung up"],
+          ["проводить, выполнять", "carried out", "carry out", "carried out"],
+          ["забрать, подобрать", "picked up", "pick up", "picked up"],
+          ["заглядывать, исследовать", "looked into", "look into", "looked into"],
+          ["выбегать, вытекать", "run out", "run out", "ran out"],
+          ["подниматься, расти", "gone up", "go up", "went up"],
+          ["откусывать, отгрызать", "bitten off", "bite off", "bit off"],
+          ["задуть, гасить", "blown out", "blow out", "blew out"],
+          ["разбирать", "taken apart", "take apart", "took apart"],
+          ["сдувать, удивлять", "blown away", "blow away", "blew away"],
+          ["заниматься", "dealt with", "deal with", "dealt with"],
+          ["проходить через", "got through|gotten through", "get through", "got through"],
+          ["отступать, отступить", "backed down", "back down", "backed down"],
+          ["регистрировать, регистрироваться", "checked in", "check in", "checked in"],
+          ["составлять, составить", "made up", "make up", "made up"],
+          ["въезжать", "moved in", "move in", "moved in"],
+          ["дотягивать, протягивать", "held out", "hold out", "held out"],
+          ["навязывать", "made of", "make of", "made of"],
+          ["возвращать", "handed back", "hand back", "handed back"],
+          ["сдавать", "handed over", "hand over", "handed over"],
+          ["придерживаться", "kept to", "keep to", "kept to"],
+          ["заводиться, заводить", "wound up", "wind up", "wound up"],
+          ["хитрить, обманывать", "tricked into", "trick into", "tricked into"],
+          ["съедать, поесть", "eaten up", "eat up", "ate up"],
+          ["спускаться, снижаться", "gone down", "go down", "went down"],
+          ["быть не серьезным", "monkeyed around with", "monkey around with", "monkeyed around with"],
+          ["подключать, включать", "plugged in", "plug in", "plugged in"],
+          ["смыть, смывать", "washed off", "wash off", "washed off"],
+          ["вбивать, отмечать", "punched in", "punch in", "punched in"],
+          ["разработать, разрабатывать", "worked out", "work out", "worked out"],
+          ["понимать, ухватиться за", "caught on", "catch on", "caught on"],
+          ["наряжать, наряжаться", "dressed up", "dress up", "dressed up"],
+          ["беситься, сходить с ума", "freaked out", "freak out", "freaked out"],
+          ["проситься выйти, приглашать", "asked out", "ask out", "asked out"],
+          ["звонить, обзванивать", "rung up", "ring up", "rang up"],
+          ["использовать, израсходовать", "used up", "use up", "used up"],
+          ["вывезти, вынимать", "taken out", "take out", "took out"],
+          ["собираться", "got together|gotten together", "get together", "got together"],
+          ["задерживать, поддерживать", "held up", "hold up", "held up"],
+          ["брать на", "taken out on", "take out on", "took out on"],
+          ["наращивать, усиливать", "beefed up", "beef up", "beefed up"],
+          ["выяснять, узнавать", "found out", "find out", "found out"],
+          ["вставлять, ставить", "put in", "put in", "put in"],
+          ["доносить, ябедничать", "told on", "tell on", "told on"],
+          ["натолкнуться, повстречаться", "come across", "come across", "came across"],
+          ["изнашивать, изнашиваться", "worn out", "wear out", "wore out"],
+          ["отламывать, прервать", "broken off", "break off", "broke off"],
+          ["снять, стащить", "pulled off", "pull off", "pulled off"],
+          ["не ложиться спать", "stayed up", "stay up", "stayed up"],
+          ["врываться, вламываться", "broken in", "break in", "broke in"],
+          ["споткнуться, опрокидываться", "fallen over", "fall over", "fell over"],
+          ["валяться, залеживаться", "lain around", "lie around", "lay around"],
+          ["поддерживать, содействовать", "made for", "make for", "made for"],
+          ["возвращать, брать обратно", "taken back", "take back", "took back"],
+          ["воспитывать, поднимать", "brought up", "bring up", "brought up"],
+          ["оставить в прошлом", "put past", "put past", "put past"],
+          ["снизить темп жизни", "slowed down", "slow down", "slowed down"],
+          ["бродить вокруг", "hung around", "hang around", "hung around"],
+          ["искать, смотреть вверх", "looked up", "look up", "looked up"],
+          ["портить дело", "messed up", "mess up", "messed up"],
+          ["окупаться, расплачиваться", "paid off", "pay off", "paid off"],
+          ["торопить, поторапливать", "hurried up", "hurry up", "hurried up"],
+          ["изнашивать, изнашиваться", "worn down", "wear down", "wore down"],
+          ["спускаться, заболеть", "come down with", "come down with", "came down with"],
+          ["собрать, положить совместно", "put together", "put together", "put together"],
+          ["включать", "switched on", "switch on", "switched on"],
+      ];
+
+        var words = [
+            //['машина', 'car'],
+        ];
+
+        var adjectives = [
+          ["активный", "active"],
+          ["злой", "angry"],
+          ["плохой ", "bad"],
+          ["красивый ", "beautiful"],
+          ["большой", "big"],
+          ["черный", "black"],
+          ["синий", "blue"],
+          ["скучный", "boring"],
+          ["яркий", "bright"],
+          ["занятой", "busy"],
+          ["чистый, ясный", "clean"],
+          ["умный", "clever"],
+          ["близкий", "close"],
+          ["холодный", "cold"],
+          ["цветной", "colored"],
+          ["удобный", "comfortable"],
+          ["общий, распространенный", "common"],
+          ["сложный", "complicated"],
+          ["сумашедший", "crazy"],
+          ["опасный", "dangerous"],
+          ["темный", "dark"],
+          ["мертвый", "dead"],
+          ["глубокий", "deep"],
+          ["другой, отличающийся", "different"],
+          ["сухой", "dry"],
+          ["ранний", "early"],
+          ["простой", "easy"],
+          ["отличный", "excellent"],
+          ["неправильный", "false"],
+          ["далекий", "far"],
+          ["быстрый", "fast"],
+          ["свободный", "free"],
+          ["свежий", "fresh"],
+          ["забавный", "funny"],
+          ["довольный", "glad"],
+          ["хороший ", "good"],
+          ["зеленый", "green"],
+          ["серый", "grey"],
+          ["счастливый", "happy"],
+          ["сложный, жесткий", "hard"],
+          ["полезный ", "helpful"],
+          ["горячий", "hot"],
+          ["голодный", "hungry"],
+          ["важный ", "important"],
+          ["невозможный", "impossible"],
+          ["волшебный ", "incredible"],
+          ["интересный", "interesting"],
+          ["добрый", "kind"],
+          ["поздний", "late"],
+          ["живой", "live"],
+          ["одинокий", "lonely"],
+          ["длинный", "long"],
+          ["восхитительный", "lovely"],
+          ["везучий", "lucky"],
+          ["новый", "new"],
+          ["хороший, милый ", "nice"],
+          ["обычный", "normal"],
+          ["старый", "old"],
+          ["оранжевый", "orange"],
+          ["пассивный", "passive"],
+          ["идеальный", "perfect"],
+          ["возможный", "possible"],
+          ["редкий", "rare"],
+          ["красный", "red"],
+          ["богатый", "rich"],
+          ["круглый", "round"],
+          ["грустный", "sad"],
+          ["безопасный", "safety"],
+          ["удовлетворенный", "satisfied"],
+          ["серьезный", "serious"],
+          ["острый", "sharp"],
+          ["шокированный", "shocked"],
+          ["короткий", "short"],
+          ["скромный", "shy"],
+          ["простой", "simple"],
+          ["медленный", "slow"],
+          ["маленький", "small"],
+          ["мягкий", "soft"],
+          ["прямой", "straight"],
+          ["сильный", "strong"],
+          ["глупый", "stupid"],
+          ["успешный", "successful"],
+          ["солнечный", "sunny"],
+          ["удивленный", "surprised"],
+          ["сладкий", "sweet"],
+          ["болтливый", "talkative"],
+          ["высокий", "tall"],
+          ["вкусный", "tasty"],
+          ["ужасный", "terrible"],
+          ["уставший", "tired"],
+          ["правильный", "true"],
+          ["уникальный", "unique"],
+          ["бесполезный ", "useless"],
+          ["теплый", "warm"],
+          ["слабый", "weak"],
+          ["мокрый", "wet"],
+          ["белый", "white"],
+          ["прекрасный", "wonderful"],
+          ["желтый", "yellow"],
+          ["молодой", "young"]
+      ];
+
+        return [].concat(
+          regular_verbs.map(function (item) {
+            return new VerbsTask(item[0], item[1], item[2], item[2]);
+          }),
+          irregular_verbs.map(function (item) {
+            return new IrregularVerbsTask(item[0], item[1], item[2], item[3]);
+          }),
+          extended_irregular.map(function (item) {
+            return new IrregularVerbsExtendedTask(item[0], item[1], item[2], item[3]);
+          }),
+          phrasal_verbs.map(function (item) {
+            return new PhrasalVerbsTask(item[0], item[2], item[3], item[1]);
+          }),
+          words.map(function (item) {
+            return new WordTask(item[0], item[1]);
+          }),
+          adjectives.map(function (item) {
+            return new AdjectiveTask(item[0], item[1]);
+          })
+        );
+      }
+    </script>
+    <script type="text/javascript">
+
+      // Осторожно тут говнокод и прочие шалости.
+      // Не сравнивать с продакшин проектами.
+
+      (function () {
+        "use strict";
+
+        /**
+         * It is copy of Function.prototype.bind.
+         */
+        function proxy(callback, context) {
+            return function () {
+                return callback.apply(context, arguments);
+            };
+        }
+
+        /**
+         * Will exec after current scope.
+         */
+        function out_of_scope(callback, context, time) {
+          time = time || 0;
+          setTimeout(proxy(callback, context), time);
+        }
+
+
+        /**
+         * Pseudo inheritance.
+         * Просто ES5, по этому так.
+         */
+        function execute_super(current, parent) {
+          var args = Array.from(arguments),
+              obj = args.shift();
+
+          obj.__proto__.__proto__ = args.shift().prototype;
+          obj.__proto__.__proto__.constructor.apply(obj, args);
+        }
+
+        /**
+         * Упрощает сложный обьект.
+         */
+        function inherit(a, b) {
+          var output = {}, args = Array.from(arguments)
+
+          args.unshift(output)
+          Object.assign.apply(Object, args)
+
+          return output
+        }
+
+        /**
+         * TaskStorage service.
+         */
+        function TaskStorage(storage, reset) {
+          execute_super(this, Array);
+
+          if (reset === undefined ? false : reset) {
+            Array.from(storage).map(proxy(function (task) {
+              this.push(task.reset());
+            }, this));
+          }
+          else {
+            Array.from(storage).map(proxy(function (task) {
+              this.push(task);
+            }, this));
+          }
+        }
+
+        TaskStorage.prototype = {
+
+          constructor: TaskStorage,
+
+          getFilteredByTypes: function (types) {
+            return this.getFiltered(function (task) {
+              return Array.from(types).includes(task.constructor);
+            });
+          },
+
+          getScores: function() {
+            var total = this.length * 5;
+            var current = 0;
+
+            for (var i = 0; i < this.length; i++) {
+              current+= Math.round(this[i].score);
+            }
+
+            return 100 - Math.round(current / (total * 0.01));
+          },
+
+          getUniqueTypes: function () {
+            var results = [];
+
+            for (var i = 0; i < this.length; i++) {
+              if (!results.includes(this[i].constructor)) {
+                results.push(this[i].constructor);
+              }
+            }
+
+            return results;
+          },
+
+          getFiltered: function (callback) {
+            return new this.constructor(this.filter(callback));
+          },
+
+          getAmountSubmitedItems: function () {
+            return this.length - this.getAmountAvailableItems();
+          },
+
+          getAmountAvailableItems: function () {
+            var amount = this.length;
+
+            for (var i = 0; i < this.length; i++) {
+              if (this[i].submited) {
+                amount--;
+              }
+            }
+
+            return amount;
+          },
+
+          getAvailableItem: function () {
+            var output = null;
+
+            for (var i = 0; i < this.length; i++) {
+              if (!this[i].submited) {
+                output = this[i];
+                break;
+              }
+            }
+
+            return output;
+          }
+        };
+
+        /**
+         * Task class.
+         */
+        function Task() {
+          this.score = 5;
+          this.submited = false;
+          this.answer = {};
+          this.sortLabel = "";
+          this.localStorage = Container().get('local_storage');
+          out_of_scope(this.loadScore, this);
+        }
+
+        Task.prototype = Object.create(EventTarget.prototype)
+        Task.prototype.constructor = Task;
+        Task.prototype.type = "Без названия";
+        Task.prototype.group = "Без названия";
+
+        Task.prototype.reset = function () {
+          this.submited = false;
+          this.answer = {};
+
+          return this;
+        };
+
+        Task.prototype.render = function (game) {
+          return Render("task", {
+            type: this.type
+          });
+        };
+
+        Task.prototype.setSubmit = function (form) {
+          this.submited = true;
+          this.answer = {};
+
+          this.submit(form);
+          this.updateScore();
+          this.saveScore();
+        };
+
+        Task.prototype.updateScore = function () {
+          if (this.isValid()) {
+            if (1 >= this.score) {
+              this.score = 0.1;
+            }
+            else {
+              this.score--;
+            }
+          }
+          else {
+            if (1 > this.score) {
+              this.score = 1;  
+            }
+            else {
+              if (5 > this.score) {
+                this.score++;
+              }
+            }
+          }
+        };
+
+        Task.prototype.saveScore = function () {
+          var statistics = this.localStorage.get('statistics') || {};
+          
+          if (!statistics[this.type]) {
+            statistics[this.type] = {};
+          }
+
+          if (this.score !== 5) {
+            statistics[this.type][this.sortLabel] = this.score;
+          }
+          
+          
+          this.localStorage.set('statistics', statistics);
+        }
+
+        Task.prototype.loadScore = function () {
+          var statistics = this.localStorage.get('statistics') || {};
+          
+          if (statistics[this.type] && statistics[this.type][this.sortLabel]) {
+            this.score = statistics[this.type][this.sortLabel];
+          }
+        }
+
+        Task.prototype.submit = function (form) {};
+
+        Task.prototype.showAnswer = function () {};
+
+        Task.prototype.isValid = function () {
+          return true;
+        };
+
+        Task.prototype.getTable = function () {
+          return document.createDocumentFragment();
+        };
+
+        Task.prototype.getTableItem = function (tasks) {
+          return document.createDocumentFragment();
+        };
+
+        /**
+         * VerbsTask class.
+         */
+        function WordTask(translation, word) {
+          Task.apply(this, arguments);
+          this.sortLabel = word
+          this.translation = translation
+          this.word = word
+        }
+
+        WordTask.prototype = Object.create(Task.prototype)
+        WordTask.prototype.constructor = WordTask;
+        WordTask.prototype.type = "Просто слова";
+        WordTask.prototype.group = "Просто слова";
+        WordTask.prototype.render = function (game) {
+          game.layout.updateWidth("700px");
+
+          var output = Render("word_task");
+
+          output.querySelector(".word").innerHTML = this.translation;
+
+          var word = output.querySelector("[name=word]");
+
+          out_of_scope(function() {
+            word.focus();
+          });
+          word.setAttribute("data-validate", this.word);
+
+          word.oninput = proxy(function (event) {
+            if (this.score > 2) {
+              if (this.compare(event.target.getAttribute("data-validate"), event.target.value)) {
+                event.target.classList.add("valid");
+              }
+              else {
+                event.target.classList.remove("valid");
+              }
+            }
+          }, this);
+
+          word.oninput = proxy(function (event) {
+            if (this.compare(event.target.getAttribute("data-validate"), event.target.value)) {
+              event.target.classList.add("valid");
+            }
+            else {
+              event.target.classList.remove("valid");
+            }
+          }, this);
+
+          return output;
+        };
+        WordTask.prototype.isValid = function () {
+          return this.submited &&
+            this.compare(this.word, this.answer.word);
+        };
+        WordTask.prototype.showAnswer = function () { alert(this.word) };
+        WordTask.prototype.submit = function (form) {
+          this.answer = {};
+          this.answer.word = form.word.value;
+        };
+        WordTask.prototype.compare = function (data, answer) {
+          return data.split('|').map(function (item) { return (item + '').toLowerCase() }).indexOf((answer + '').toLowerCase()) > -1;
+        };
+        WordTask.prototype.getTable = function () {
+          return Render("task_words_table", { type: this.type });
+        };
+        WordTask.prototype.getTableItem = function (tasks) {
+          var rows = [];
+          var mapping = {
+            word: null,
+          }
+          for (var t = 0; t < tasks.length; t++) {
+            var row = {
+              translation: tasks[t].translation,
+            };
+            for (var prop in mapping) {
+              if (mapping.hasOwnProperty(prop)) {
+                if (tasks[t].submited) {
+                  if (this.compare(tasks[t][prop], tasks[t].answer[prop])) {
+                    row[prop] = tasks[t].answer[prop];
+                  }
+                  else {
+                    row[prop] = document.createRange().createContextualFragment((tasks[t].answer[prop] ? '<s>' + tasks[t].answer[prop] +'</s> ' : '') + tasks[t][prop].replace('|', ', '));
+                  }
+                }
+                else {
+                  row[prop] = document.createRange().createContextualFragment(tasks[t][prop].replace('|', ', '));
+                }
+              }
+            }
+
+            rows.push(row);
+          }
+
+          var output = Render("task_words_table_item", {
+            rows: rows.reverse()
+          });
+
+          output.querySelectorAll('tbody tr').forEach(function (row, index) {
+            if (tasks[index].submited) {
+              row.classList.add(tasks[index].isValid() ? 'positive' : 'negative');
+            }
+          });
+
+          return output;
+        }
+
+        /**
+         * AdjectiveTask class.
+         */
+         function AdjectiveTask() {
+          WordTask.apply(this, arguments);
+        }
+
+        AdjectiveTask.prototype = Object.create(WordTask.prototype)
+        AdjectiveTask.prototype.constructor = AdjectiveTask;
+        AdjectiveTask.prototype.type = "Прилагательные";
+        AdjectiveTask.prototype.group = "Прилагательные";
+
+        
+        /**
+         * VerbsTask class.
+         */
+        function VerbsTask(translation, infinitive, past_simple, past_participle) {
+          Task.apply(this, arguments);
+          this.sortLabel = infinitive;
+          this.translation = translation;
+          this.infinitive = infinitive;
+          this.past_simple = past_simple;
+          this.past_participle = past_participle;
+        }
+
+        VerbsTask.prototype = Object.create(Task.prototype)
+        VerbsTask.prototype.constructor = VerbsTask;
+        VerbsTask.prototype.type = "Правильные глаголы";
+        VerbsTask.prototype.group = "Глаголы";
+        VerbsTask.prototype.render = function (game) {
+          game.layout.updateWidth("700px");
+
+          var output = Render("verbs_task");
+
+          output.querySelector(".word").innerHTML = this.translation;
+
+          var infinitive = output.querySelector("[name=infinitive]"),
+              past_simple = output.querySelector("[name=past_simple]"),
+              past_participle = output.querySelector("[name=past_participle]");
+
+          out_of_scope(function() {
+            infinitive.focus();
+          });
+          infinitive.setAttribute("data-validate", this.infinitive);
+          past_simple.setAttribute("data-validate", this.past_simple);
+          past_participle.setAttribute("data-validate", this.past_participle);
+          infinitive.oninput = past_simple.oninput = past_participle.oninput = proxy(function (event) {
+            if (this.score > 2) {
+              if (this.compare(event.target.getAttribute("data-validate"), event.target.value)) {
+                event.target.classList.add("valid");
+              }
+              else {
+                event.target.classList.remove("valid");
+              }
+            }
+          }, this);
+
+          return output;
+        };
+
+        VerbsTask.prototype.isValid = function () {
+            return this.submited &&
+              this.compare(this.infinitive, this.answer.infinitive) &&
+              this.compare(this.past_simple, this.answer.past_simple) &&
+              this.compare(this.past_participle, this.answer.past_participle);
+        };
+        VerbsTask.prototype.showAnswer = function () { alert(this.infinitive + ' - ' + this.past_simple + ' - ' + this.past_participle) };
+        VerbsTask.prototype.submit = function (form) {
+          this.answer = {};
+          this.answer.infinitive = form.infinitive.value;
+          this.answer.past_simple = form.past_simple.value;
+          this.answer.past_participle = form.past_participle.value;
+        };
+
+        VerbsTask.prototype.compare = function (data, answer) {
+          return data.split('|').map(function (item) { return (item + '').toLowerCase() }).indexOf((answer + '').toLowerCase()) > -1;
+        }
+
+        VerbsTask.prototype.getTable = function () {
+          return Render("task_verbs_table", { type: this.type });
+        };
+
+        VerbsTask.prototype.getTableItem = function (tasks) {
+          var rows = [];
+          var mapping = {
+            infinitive: null,
+            past_simple: null,
+            past_participle: null,
+          }
+          for (var t = 0; t < tasks.length; t++) {
+            var row = {
+              translation: tasks[t].translation,
+            };
+            for (var prop in mapping) {
+              if (mapping.hasOwnProperty(prop)) {
+                if (tasks[t].submited) {
+                  if (this.compare(tasks[t][prop], tasks[t].answer[prop])) {
+                    row[prop] = tasks[t].answer[prop];
+                  }
+                  else {
+                    row[prop] = document.createRange().createContextualFragment((tasks[t].answer[prop] ? '<s>' + tasks[t].answer[prop] +'</s> ' : '') + tasks[t][prop].replace('|', ', '));
+                  }
+                }
+                else {
+                  row[prop] = document.createRange().createContextualFragment(tasks[t][prop].replace('|', ', ')); 
+                }
+              }
+            }
+
+            rows.push(row);
+          }
+
+          var output = Render("task_verbs_table_item", {
+            rows: rows.reverse()
+          });
+
+          output.querySelectorAll('tbody tr').forEach(function (row, index) {
+            if (tasks[index].submited) {
+              row.classList.add(tasks[index].isValid() ? 'positive' : 'negative');
+            }
+          });
+
+          return output;
+        };
+
+        /**
+         * IrregularVerbsTask class.
+         */
+         function IrregularVerbsTask() {
+          VerbsTask.apply(this, arguments);
+        }
+
+        IrregularVerbsTask.prototype = Object.create(VerbsTask.prototype)
+        IrregularVerbsTask.prototype.constructor = IrregularVerbsTask;
+        IrregularVerbsTask.prototype.type = "Неправильные глаголы";
+
+        /**
+         * IrregularVerbsExtendedTask class.
+         */
+         function IrregularVerbsExtendedTask() {
+          VerbsTask.apply(this, arguments);
+        }
+
+        IrregularVerbsExtendedTask.prototype = Object.create(IrregularVerbsTask.prototype)
+        IrregularVerbsExtendedTask.prototype.constructor = IrregularVerbsExtendedTask;
+        IrregularVerbsExtendedTask.prototype.type = "Неправильные глаголы +";
+
+        
+        /**
+         * PhrasalVerbsTask class.
+         */
+        function PhrasalVerbsTask() {
+          VerbsTask.apply(this, arguments);
+        }
+
+        PhrasalVerbsTask.prototype = Object.create(IrregularVerbsTask.prototype)
+        PhrasalVerbsTask.prototype.constructor = PhrasalVerbsTask;
+        PhrasalVerbsTask.prototype.type = "Фразовые глаголы";
+
+        
+        /**
+         * Game class.
+         */
+        function Game(container) {
+            this.layout = container.get("layout");
+            this.render = container.get("render");
+            out_of_scope(function () {
+              this.view_default = container.get("view_default");
+            }, this);
+        }
+
+        Game.prototype = {
+
+          timeOfEnd: 0,
+
+          timer: 0,
+
+          timerHandler: null,
+
+          constructor: Game,
+
+          setStorage: function (storage) {
+            this.storage = storage;
+          },
+
+          setTimer: function (time) {
+            this.timer = time * 60 * 1000;
+          },
+
+          getCurrentProgress: function () {
+            if (this.timer > 0) {
+              var left = this.timeOfEnd - new Date().getTime();
+
+              return this.storage.getAmountAvailableItems()
+                ? (this.timer - left) / (this.timer * 0.01)
+                : 100.5;
+            }
+
+            return (this.storage.length - this.storage.getAmountAvailableItems() + 1) / (this.storage.length * 0.01);
+          },
+
+          updateBar: function () {
+            this.bar.style.width = this.getCurrentProgress() + "%";
+          },
+
+          start: function () {
+            if (this.timer > 0) {
+              this.timeOfEnd = new Date().getTime() + this.timer;
+              this.timerHandler = setInterval(proxy(function () {
+                this.updateBar();
+
+                if (this.getCurrentProgress() >= 100) {
+                  clearInterval(this.timerHandler);
+                }
+              }, this), 200);
+            }
+
+            this.storage.sort(function () {
+              //@TODO Учитывать Score.
+              return Math.random() - 0.5;
+            });
+
+            var output = this.render("game");
+
+            this.area = output.getElementById("game_form");
+            this.form = output.querySelector("form");
+            this.bar = output.querySelector(".progress .bar");
+
+            output.querySelector("#stop").onclick = proxy(function (event) {
+              event.preventDefault();
+
+              if (this.storage.getAmountSubmitedItems()) {
+                this.finish();
+              }
+              else {
+                this.view_default.execute();
+              }
+            }, this);
+            
+            output.querySelector("#answer").onclick = proxy(function (event) {
+              event.preventDefault();
+              this.currentTask.showAnswer();
+              this.form.dispatchEvent(new Event('submit'));
+            }, this);
+
+            this.form.onsubmit = proxy(function (event) {
+              event.preventDefault();
+              this.currentTask.setSubmit(this.form);
+              this.execute();
+            }, this);
+
+            this.execute();
+            this.layout.execute(output);
+          },
+
+          process: function (task) {
+            this.area.innerHTML = "";
+            this.area.appendChild(
+              task.render(this)
+            );
+          },
+
+          execute: function () {
+            this.updateBar();
+
+            if (this.getCurrentProgress() <= 100) {
+              this.currentTask = this.storage.getAvailableItem();
+              this.process(this.currentTask);
+            }
+            else {
+              this.finish();
+            }
+          },
+
+          finish: function () {
+            this.storage.sort(function (task_a, task_b) {
+              return task_a.sortLabel.localeCompare(task_b.sortLabel);
+            });
+            this.storage.sort(function (task_a, task_b) {
+              return task_a.constructor.name.localeCompare(task_b.constructor.name);
+            });
+
+            var total = this.storage.getAmountSubmitedItems(),
+                validated = this.storage.getFiltered(function (task) {
+                  return task.isValid();
+                }).length;
+
+            var types = this.storage.getUniqueTypes();
+            var results = document.createDocumentFragment();
+
+            for (var i = 0; i < types.length; i++) {
+              var tasks = this.storage.getFilteredByTypes([types[i]]).getFiltered(function (task) {
+                return task.submited;
+              });
+
+              if (!tasks.length) {
+                continue;
+              }
+
+              var table = types[i].prototype.getTable();
+              var result_table = types[i].prototype.getTableItem(tasks);
+
+              table.querySelector(".results")
+                .replaceWith(result_table.querySelector('tbody'));
+
+              results.appendChild(table);
+            }
+
+
+            var output = this.render("game_results", {
+              amountError: (total - validated) + "",
+              percentSuccess: Math.round(validated / (total / 100)) + "%",
+              amountSuccess: validated + "",
+              results: results,
+            });
+
+            output.querySelector("#exit").onclick = proxy(function (event) {
+              event.preventDefault();
+              this.view_default.execute();
+            }, this);
+
+            this.layout.updateWidth("800px");
+            this.layout.execute(output);
+          }
+        }
+
+        /**
+         * Controller class.
+         */
+        function Controller(container) {
+          this.render = container.get("render");
+          this.layout = container.get("layout");
+          this.view = container.get("view");
+        }
+
+        Controller.prototype = {
+
+          constructor: Controller,
+
+          execute: function () {
+            var title = this.getTitle(),
+                content = this.getContent();
+
+            if (title) {
+              this.view.setTitle(title);
+            }
+
+            if (content) {
+              this.layout.execute(content);
+            }
+          },
+
+          getTitle: function () {
+            return "";
+          },
+
+          getContent: function () {
+            return this.render("404");
+          }
+        };
+
+        /**
+         * Service Container.
+         */
+        function Container(list) {
+          if (this && this.constructor == Container) {
+            _container = this;
+            
+            for (var name in list) {
+              if (list.hasOwnProperty(name)) {
+                this.register(name, list[name]);
+              }
+            }
+          }
+          else {
+            return _container;
+          }
+        }
+
+        var _container = null;
+
+        Container.prototype = {
+          constructor: Container,
+
+          _callback: {},
+
+          _services: {},
+
+          get: function (name) {
+            if (!this._services[name]) {
+              this._services[name] = this._callback.constructor
+                ? new (this._callback[name])(this)
+                : this._callback[name](this);
+            }
+
+            return this._services[name];
+          },
+
+          register: function (name, observer) {
+            this._callback[name] = observer;
+          }
+        }
+
+        /**
+         * Service UpdateManager.
+         */
+        function UpdateManager(container) {
+          this.date = container.get("datetime");
+          this.storage = container.get("local_storage");
+        }
+
+        UpdateManager.prototype = {
+
+          constructor: UpdateManager,
+
+          url: "https://api.github.com/repos/artem0793/irregular-verbs/releases/latest",
+
+          checkAvailableRelease: function (reset) {
+            reset = reset || false;
+
+            var time = new this.date(),
+              cache = this.storage.get("check_update"),
+              key = time.getFullYear() + '_' + time.getMonth() + '_' + time.getDate() + '_' + time.getHours();
+
+            if (reset !== true && cache && cache[key]) {
+              return Promise.resolve(cache[key]);
+            }
+
+            return fetch(this.url)
+              .then(function(response) {
+                return response.json();
+              })
+              .then(proxy(function(data) {
+                var save = {};
+                save[key] = data;
+                this.storage.set("check_update", save);
+
+                return save;
+              }, this));
+          }
+        }
+
+        /**
+         * Service LocalStorage.
+         */
+        function LocalStorage(container) {
+          this.native_local_storage = container.get("native_local_storage");
+          this.serializer = container.get("json_serializer");
+        }
+
+        LocalStorage.prototype = {
+
+          constructor: LocalStorage,
+
+          get: function (key) {
+            return this.native_local_storage[key]
+              ? this.serializer.decode(this.native_local_storage[key])
+              : null;
+          },
+
+          set: function (key, data) {
+            this.native_local_storage[key] = this.serializer.encode(data);
+          }
+        };
+
+        /**
+         * Service JsonSerializer.
+         */
+        function JsonSerializer(container) {
+          this.native_json = container.get("native_json");
+        }
+
+        JsonSerializer.prototype = {
+
+          constructor: JsonSerializer,
+
+          decode: function (data) {
+            return this.native_json.parse(data);
+          },
+
+          encode: function (data) {
+            return this.native_json.stringify(data);
+          }
+        };
+
+        /**
+         * Render engine.
+         * Не удобная хрень, лучше бы реакт научился бы.
+         */
+        function Render(name, vars) {
+          var template = document.createDocumentFragment();
+          vars = vars || {};
+
+          if (name.constructor === String) {
+            var source = document.getElementById('theme_' + name);
+
+            if (!source) {
+              throw error('Template isn\'t found')
+            }
+
+            template = document.createRange().createContextualFragment(source.innerHTML);
+          } else {
+            template.appendChild(name)
+          }
+
+          var keys = Object.keys(vars);
+
+          for (var k = 0; k < keys.length; k++) {
+            var key = keys[k];
+            if (vars.hasOwnProperty(key)) {
+              template.querySelectorAll('[vid-' + key + ']').forEach(function (element) {
+                element.removeAttribute('vid-' + key + '')
+
+                if (vars[key].constructor === Array) {
+                  for (var i = 0; i < vars[key].length; i++) {
+                    element.after(
+                      Render(element.cloneNode(true), inherit(vars, vars[key][i]))
+                    )
+                  }
+                  element.parentNode.removeChild(element)
+                } else {
+                  if (vars[key].constructor !== String) {
+                    element.appendChild(vars[key]);
+                  }
+                  else {
+                    element.innerHTML = vars[key];
+                  }
+                }
+              })
+            }
+          }
+
+          return template
+        }
+
+        /**
+         * Loader service.
+         */
+        function Loader() {
+          return new Promise(function (resolve) {
+            document.addEventListener("DOMContentLoaded", resolve);
+          });
+        }
+
+        /**
+         * View service.
+         */
+        function View(container) {
+          this.document = container.get("document");
+          this.loader = container.get("loader");
+        }
+
+        View.prototype = {
+
+          constructor: View,
+
+          setup: function () {
+            this.loader
+              .then(proxy(function () {
+              this.body = this.document.querySelector("body");
+            }, this))
+              .then(proxy(function () {
+              this.body.classList.remove("loading");
+            }, this));
+          },
+
+          setTitle: function (value) {
+            this.document.title = value;
+          },
+
+          setBody: function (element) {
+            this.body.innerHTML = "";
+
+            this.body.append(element);
+          },
+        }
+
+        /**
+         * Application service.
+         */
+        function Application(container) {
+            this.view = container.get("view");
+            this.loader = container.get("loader");
+            this.controller = container.get("view_default");
+        }
+
+        Application.prototype = {
+
+          VERSION: "v2.0",
+
+          constructor: Application,
+
+          start: function () {
+            this.view.setup();
+            this.loader.then(proxy(function () {
+              out_of_scope(function () {
+                this.controller.execute();
+              }, this);
+            }, this));
+          }
+        }
+
+        /**
+         * Application service.
+         */
+        function Layout(container) {
+            this.view = container.get("view");
+            this.render = container.get("render");
+        }
+
+        Layout.prototype = {
+
+          constructor: Layout,
+
+          name: "default",
+
+          width: "400px",
+
+          currentName: "",
+
+          currentWidth: "",
+
+          execute: function (content) {
+            if (this.name !== this.currentName) {
+              this.currentName = this.name;
+              this.content = this.render("layout_" + this.name, {
+                content: content
+              });
+
+              this.view.setBody(this.content);
+              this.updateWidth();
+            }
+            else {
+              var ref = this.view.body.querySelector("#content");
+
+              ref.innerHTML = "";
+              ref.appendChild(content);
+            }
+          },
+
+          updateWidth: function (width) {
+            this.width = width || this.width;
+
+            if (this.width !== this.currentWidth) {
+              this.currentWidth = this.width;
+              this.view.body.querySelectorAll("#main_column")
+                .forEach(proxy(function (element) {
+                  element.style.width = this.width;
+                }, this));
+            }
+          }
+        };
+
+        /**
+         * Игра.
+         */
+        function GameController(container) {
+          execute_super(this, Controller, container);
+          this.game = container.get("game");
+          out_of_scope(function () {
+            this.view_default = container.get("view_default");
+          }, this);
+        }
+
+        GameController.prototype = {
+
+          constructor: GameController,
+
+          getTitle: function () {
+            return "Тренажер";
+          },
+
+          getContent: function () {
+            this.game.start();
+
+            return null;
+          }
+
+        };
+
+        /**
+         * Главное меню.
+         */
+        function DefaultController(container) {
+          execute_super(this, Controller, container);
+          this.update_manager = container.get("update_manager");
+          this.game = container.get("game");
+          this.game_storage = container.get("game_storage");
+
+          out_of_scope(function () {
+            this.view_game = container.get("view_game");
+            this.application = container.get("application");
+          }, this);
+        }
+
+        DefaultController.prototype = {
+
+          constructor: DefaultController,
+
+          getTitle: function() {
+            return "Меню";
+          },
+
+          getContent: function () {
+            var menu = this.render("general_menu", {
+                  version: this.application.VERSION,
+                  available: this.application.VERSION
+                }),
+                update_area = menu.querySelector(".sub.header"),
+                form = menu.querySelector(".form"),
+                start_link = menu.querySelector("#view_game"),
+                update_link = menu.querySelector(".update"),
+                restriction = menu.querySelector("#restriction");
+
+            var task_types = this.game_storage.getUniqueTypes().map(function(item) {
+              return {
+                type: item,
+                typeName: item.prototype.type,
+                groupName: item.prototype.group
+              }
+            }).sort(function(a, b) {
+              return a.typeName.localeCompare(b.typeName)
+            }).sort(function(a, b) {
+              return a.groupName.localeCompare(b.groupName)
+            });
+            
+            var options = {};
+
+            for (var task_key = 0; task_key < task_types.length; task_key++) {
+              if (!options[task_types[task_key].groupName]) {
+                options[task_types[task_key].groupName] = [];
+              }
+              options[task_types[task_key].groupName].push(task_types[task_key]);
+            };
+            var id_index = 1;
+            for (var group_name in options) {
+              if (options.hasOwnProperty(group_name)) {
+                var option = this.render('menu_task_options', {
+                  groupName: group_name,
+                  options: options[group_name].map((function(group) {
+                    var _type_items = this.game_storage.getFilteredByTypes([group.type]);
+                    return {
+                      label: group.typeName + "",
+                      amount: _type_items.length + "",
+                      score: _type_items.getScores() + ""
+                    }
+                  }).bind(this)),
+                });
+
+                Array.from(option.querySelectorAll('.checkbox')).reverse().forEach(function(item, index) {
+                  var label = item.querySelector('label');
+                  var input = item.querySelector('input');
+                  var id = 'option_' + id_index++;
+
+                  label.setAttribute('for', id);
+                  input.setAttribute('id', id);
+                  input.setAttribute('name', id);
+                  input.setAttribute('value', options[group_name][index].type.name);
+                });
+                form.appendChild(option);
+              }
+            }
+            
+
+            out_of_scope(function () {
+              this.layout.updateWidth("350px");
+            }, this);
+
+            update_area.style.display = "none";
+
+            start_link.onclick = proxy(function (event) {
+              event.preventDefault();
+              var types = Array.from(form.querySelectorAll('[id^=option_]')).filter(function (item) {
+                return item.checked;
+              }).map(function(item) {
+                return eval(item.value);
+              });
+
+              var game_storage = this.game_storage.getFilteredByTypes(types);
+
+              if (game_storage.length) {
+                this.game.setStorage(new TaskStorage(game_storage, true));
+                if (restriction.selectedOptions[0].value > 0) {
+                  this.game.setTimer(parseInt(restriction.selectedOptions[0].value, 10));
+                }
+                this.view_game.execute();
+              }
+              else {
+                alert("Нет задач в этой категории.");
+              }
+            }, this);
+
+            try {
+              this.update_manager.checkAvailableRelease()
+                .then(proxy(function (release) {
+                  if (parseFloat((release.tag_name + '').replace(/\w/, ''), 10) > parseFloat(this.application.VERSION.replace('v', ''), 10)) {
+                    update_area.style.display = "";
+                    update_link.href = "https://github.com/artem0793/irregular-verbs/archive/refs/tags/" + release.tag_name + ".zip";
+                  }
+                }, this));
+            } catch (e) {
+                console.log(e);
+            }
+
+            return menu;
+          }
+        };
+
+        (function (container) {
+          container.get("application")
+            .start();
+        })(new Container({
+          "document": function () { return document; },
+          "datetime": function () { return Date; },
+          "native_local_storage": function () { return localStorage; },
+          "native_json": function () { return JSON; },
+          "json_serializer": JsonSerializer,
+          "local_storage": LocalStorage,
+          "loader": Loader,
+          "view": View,
+          "render": function () { return Render },
+          "layout": Layout,
+          "application": Application,
+          "update_manager": UpdateManager,
+          "view_default": DefaultController,
+          "view_game": GameController,
+          "game": Game,
+          "game_storage": function () {
+            return new TaskStorage(tasks(
+              VerbsTask,
+              IrregularVerbsTask,
+              IrregularVerbsExtendedTask,
+              PhrasalVerbsTask,
+              WordTask,
+              AdjectiveTask
+            ));
+          },
+        }));
+      })(tasks);
+    </script>
+
+    <script id="theme_404" type="html/template">
+        <h1>Page was not found</h1>
+    </script>
+    <script id="theme_layout_default" type="html/template">
+        <div class="ui middle aligned center aligned grid" style="height: 100%">
+            <div id="main_column" class="column" style="text-align: left;">
+                <div id="content" vid-content></div>
+            </div>
+            <div class="row">
+                <div class="column one">
+                    <p>Cообщить об ошибке <a href="mailto:artem0793@gmail.com">artem0793@gmail.com</a></p>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script id="theme_general_menu" type="html/template">
+        <div class="ui inverted segment">
+            <span class="ui red ribbon label">Версия: <span vid-version></span></span>
+            <h1 class="ui inverted header" style="margin-top:0">
+                <span class="sub header">
+                    Доступно обновление до <span vid-available></span>
+                    <a class="update" target="_blank">скачать</a>
+                </span>
+                Проверятель 2000
+            </h1>
+            <form class="ui inverted form">
+            </form>
+            <button style="margin-top: 15px" id="view_game" type="button" class="ui inverted primary basic button">Начать</button>
+            <select name="restriction" id="restriction" class="ui dropdown">
+                <option value="-1" selected>Все</option>
+                <option value="45">45 мин</option>
+                <option value="30">30 мин</option>
+                <option value="20">20 мин</option>
+                <option value="15">15 мин</option>
+                <option value="10">10 мин</option>
+                <option value="5">5 мин</option>
+                <option value="1">1 мин</option>
+            </select>
+        </div>
+    </script>
+    <script id="theme_menu_task_options" type="html/template">
+      <div class="ui horizontal inverted divider" vid-groupName></div>
+      <div class="field" vid-options>
+        <div class="ui checkbox">
+            <input type="checkbox" tabindex="0">
+            <label><span vid-label></span> (<span vid-amount></span>) - <span vid-score></span>%</label>
+        </div>
+      </div>
+    </script>
+    <script id="theme_task" type="html/template">
+        <h1 vid-type></h1>
+    </script>
+    <script id="theme_game" type="html/template">
+        <form autocomplete="off" class="ui segment huge form">
+            <div id="game_form"></div>
+            <button class="ui red basic button" id="stop" type="button" tabindex="-1">Остановить</button>
+            <button class="ui red basic button" id="answer" type="button" tabindex="-1">Забыл</button>
+            <button class="ui blue basic submit button" type="submit">Дальше <i class="right arrow icon"></i></button>
+            <div class="ui bottom blue small attached progress"><div class="bar"></div></div>
+        </form>
+    </script>
+    <script id="theme_verbs_task" type="html/template">
+        <div class="ui stacked blue compact segment" style="display:table;margin-left:auto;margin-right:auto">
+            <h3 class="ui header word">Слово</h3>
+        </div>
+        <div class="three fields">
+            <div class="field">
+                <label>Infinitive</label>
+                <input type="text" name="infinitive">
+            </div>
+            <div class="field">
+                <label>Past Simple</label>
+                <input type="text" name="past_simple">
+            </div>
+            <div class="field">
+                <label>Past Participle</label>
+                <input type="text" name="past_participle">
+            </div>
+        </div>
+    </script>
+
+    <script id="theme_game_results" type="html/template">
+        <div class="ui segment">
+            <h1 class="ui header">Результаты</h1>
+            <div class="ui column centered grid">
+                <div class="column">
+                    <div class="ui statistics">
+                        <div class="red statistic">
+                            <div class="value" vid-amountError></div>
+                            <div class="label">Ошибок</div>
+                        </div>
+                        <div class="blue statistic">
+                            <div class="value" vid-percentSuccess></div>
+                            <div class="label">Успех</div>
+                        </div>
+                        <div class="green statistic">
+                            <div class="value" vid-amountSuccess></div>
+                            <div class="label">Правильных</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div vid-results></div>
+            <button id="exit" class="ui blue basic submit button" style="margin-top: 15px">Меню</button>
+        </div>
+    </script>
+    <script id="theme_task_verbs_table" type="html/template">
+        <h2 class="ui header" vid-type></h2>
+        <table class="ui selectable celled table">
+            <thead>
+            <tr>
+                <th>Слово</th>
+                <th>Infinitive</th>
+                <th>Past Simple</th>
+                <th>Past Participle</th>
+            </tr>
+            </thead>
+            <tbody class="results"></tbody>
+        </table>
+    </script>
+    <script id="theme_task_verbs_table_item" type="html/template">
+        <table>
+            <tr vid-rows>
+                <td><p><b vid-translation></b></p></td>
+                <td class="infinitive"><p vid-infinitive></p></td>
+                <td class="past_simple"><p vid-past_simple></p></td>
+                <td class="past_participle"><p vid-past_participle></p></td>
+            </tr>
+        </table>
+    </script>
+    <!-- Слово начало -->
+    <script id="theme_word_task" type="html/template">
+        <div class="ui stacked blue compact segment" style="display:table;margin-left:auto;margin-right:auto">
+            <h3 class="ui header word">Слово</h3>
+        </div>
+        <div class="field" style="margin-bottom: 30px">
+            <label>Перевод</label>
+            <input type="text" name="word">
+        </div>
+    </script>
+    <script id="theme_task_words_table" type="html/template">
+        <h2 class="ui header" vid-type></h2>
+        <table class="ui selectable celled table">
+            <thead>
+            <tr>
+                <th>Слово</th>
+                <th>Перевод</th>
+            </tr>
+            </thead>
+            <tbody class="results"></tbody>
+        </table>
+    </script>
+    <script id="theme_task_words_table_item" type="html/template">
+        <table>
+            <tr vid-rows>
+                <td><p><b vid-translation></b></p></td>
+                <td class="word"><p vid-word></p></td>
+            </tr>
+        </table>
+    </script>
+    <!-- Слово конец -->
+  </head>
+<body class="ui attached inverted loading segment" style="border-width: 0">
+</body>
+</html>
